@@ -41,6 +41,6 @@ def load_restaurant(data):
             # )
 
 
-with open("yelp-data/scraped_data2.json") as json_file:
+with open("yelp-data/scraped_data.json") as json_file:
     restaurant_list = json.load(json_file, parse_float=Decimal)
 load_restaurant(restaurant_list)

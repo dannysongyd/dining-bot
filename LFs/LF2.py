@@ -178,10 +178,6 @@ def send_ses(message, info_dict):
         print(response['MessageId'])
 
 
-# sns = boto3.client('sns', region_name='us-east-1')
-# sns.publish(PhoneNumber="+7742621519", Message=message)
-
-
 def lambda_handler(event, context):
     # TODO implement
 
@@ -191,7 +187,8 @@ def lambda_handler(event, context):
         ids = get_business_id_from_es(info_dict)
         business_list = get_business_name_and_address(ids)
         message = build_message(info_dict, business_list)
-        send_ses(message, info_dict)
+        # send_ses(message, info_dict)
+        send_sms(message, info_dict)
         return {
             'statusCode': 200,
             'body': json.dumps('Hello from Lambda!')
@@ -201,3 +198,9 @@ def lambda_handler(event, context):
             'statusCode': 200,
             'body': json.dumps('No new message now')
         }
+
+
+def send_sms(message, info_dict):
+    phone = info_dict['phone']
+    sns = boto3.client('sns', region_name='us-east-1')
+    sns.publish(PhoneNumber=phone, Message=message)

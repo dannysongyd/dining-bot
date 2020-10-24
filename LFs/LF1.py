@@ -6,9 +6,9 @@ import boto3
 import dateutil.parser
 import datetime
 
+
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
-
 sqs = boto3.client('sqs')
 queue_url = 'https://sqs.us-east-1.amazonaws.com/715339036598/ChatbotQueue'
 
@@ -222,7 +222,7 @@ def isvalid_date(date):
 def isvalid_people(people):
     try:
         num = int(people)
-        if num > 0:
+        if num > 0 and num < 20:
             return True
         else:
             return False
@@ -256,17 +256,14 @@ def validate_input(location, cuisine, date, dtime, people, phone):
         print(dtime)
         if len(dtime) != 5:
             return build_validation_result(False, 'time', "Please try a valid time for example 18:00.")
-        for i in range(len(dtime)):
-            if i == 2:
-                if dtime[i] != ":":
-                    return build_validation_result(False, 'time', "Please try a valid time for example: 18:00.")
-            else:
-                if not dtime[i].isalnum():
-                    return build_validation_result(False, 'time', "Please try a valid time for example: 18:00.")
+        curr_full_time_str = str(datetime.datetime.strptime(
+            date, '%Y-%m-%d').date()) + ' ' + dtime
+        if datetime.datetime.strptime(curr_full_time_str, '%Y-%m-%d %H:%M') < datetime.datetime.now():
+            return build_validation_result(False, 'time', "Please try a valid time that is not before")
 
     if people is not None:
         if not isvalid_people(people):
-            return build_validation_result(False, 'people', 'I did not understand that, how many people?')
+            return build_validation_result(False, 'people', 'Your party size should be less than 20. Please try agian')
 
     return build_validation_result(True, None, None)
 

@@ -37,7 +37,7 @@ $(document).ready(function () {
   $(window).load(function () {
     $messages.mCustomScrollbar();
     insertResponseMessage(
-      "Hi there, I'm your personal Concierge. How can I help?"
+      "Hi there, I'm your personal Concierge. How can I help you today?"
     );
   });
 
